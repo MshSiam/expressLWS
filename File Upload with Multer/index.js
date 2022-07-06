@@ -1,24 +1,53 @@
 const express = require("express")
 const multer = require("multer")
+const path = require("path")
 
 // file upload folder
 const uploadFolder = "./uploads/"
 
+// ========setting file original name ==========
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadFolder)
+  },
+  filename: (req, file, cb) => {
+    const fileEsxt = path.extname(file.originalname)
+    const fileName =
+      file.originalname
+        .replace(fileEsxt, "")
+        .toLowerCase()
+        .split(" ")
+        .join("-") + Date.now()
+
+    cb(null, fileName + fileEsxt)
+  }
+})
+
 // prepare the final multer object
 var upload = multer({
-  dest: uploadFolder,
+  storage: storage,
   limits: {
     fileSize: 1000000
   },
   fileFilter: (req, file, cb) => {
-    if (
-      file.mimetype === "image/jpeg" ||
-      file.mimetype === "image/png" ||
-      file.mimetype === "image/jpg"
-    ) {
-      cb(null, true)
+    if (file.fieldname === "avatar") {
+      if (
+        file.mimetype === "image/jpeg" ||
+        file.mimetype === "image/png" ||
+        file.mimetype === "image/jpg"
+      ) {
+        cb(null, true)
+      } else {
+        cb(new Error("Only jpg, png, jpeg format allowed."))
+      }
+    } else if (file.filename === "doc") {
+      if (file.mimetype === "application/pdf") {
+        cb(null, true)
+      } else {
+        cb(new Error("Only PDF file allowed"))
+      }
     } else {
-      cb(new Error("Only jpg, png, jpeg format allowed."))
+      cb(new Error("There was an unknown error"))
     }
   }
 })
@@ -38,16 +67,17 @@ app.post("/", upload.single("avatar"), (req, res) => {
 // })
 
 // ================== upload a gallary ==================
-// app.post(
-//   "/",
-//   upload.fields([
-//     { name: "avatar", maxCount: 1 },
-//     { name: "gallery", maxCount: 2 }
-//   ]),
-//   (req, res) => {
-//     res.send("Hello World")
-//   }
-// )
+app.post(
+  "/",
+  upload.fields([
+    { name: "avatar", maxCount: 1 },
+    { name: "doc", maxCount: 1 }
+  ]),
+  (req, res) => {
+    console.log(req.files)
+    res.send("Hello World")
+  }
+)
 
 // ======================if we want to upload form data =================
 
@@ -69,6 +99,6 @@ app.use((err, req, res, next) => {
   }
 })
 
-app.listen(3000, (req, res) => {
+app.listen(8000, (req, res) => {
   console.log("listening")
 })
