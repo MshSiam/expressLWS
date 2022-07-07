@@ -20,7 +20,7 @@ router.post("/", async (req, res) => {
   await newTodo.save((err) => {
     if (err) {
       res.status(500).json({
-        errror: "There was an server side error!"
+        error: "There was an server side error!"
       })
     } else {
       res.status(200).json({
@@ -31,7 +31,19 @@ router.post("/", async (req, res) => {
 })
 
 // post multiple todo
-router.post("/all", async (req, res) => {})
+router.post("/all", async (req, res) => {
+  await Todo.insertMany(req.body, (err) => {
+    if (err) {
+      res.status(500).json({
+        error: "There was an server side Error."
+      })
+    } else {
+      res.status(200).json({
+        message: "Many Data inserted Successfully."
+      })
+    }
+  })
+})
 
 // put todo
 router.put("/:id", async (req, res) => {})
