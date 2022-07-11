@@ -55,6 +55,14 @@ router.get("/js", async (req, res) => {
     data: data
   })
 })
+// // // // Get Todo by language // // // //
+
+router.get("/language", async (req, res) => {
+  const data = await Todo.find().byLanguage("mongo")
+  res.status(200).json({
+    data: data
+  })
+})
 
 // GET A TODO by ID
 router.get("/:id", async (req, res) => {
