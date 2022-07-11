@@ -25,6 +25,37 @@ router.get("/", (req, res) => {
     })
 })
 
+// // // // Instance Methode // // // //
+
+// Get Active TOdos (asyncs await) (recomended)
+router.get("/active", async (req, res) => {
+  const todo = new Todo()
+  const data = await todo.findActive()
+  res.status(200).json({
+    data: data
+  })
+})
+
+// Get Active todos with Callback (Not Recomended)
+
+router.get("/actives", (req, res) => {
+  const todo = new Todo()
+  todo.findActiveCallback((err, data) => {
+    res.status(200).json({
+      data
+    })
+  })
+})
+
+// // // // Static Methodes // // // //
+
+router.get("/js", async (req, res) => {
+  const data = await Todo.findByJs()
+  res.status(200).json({
+    data: data
+  })
+})
+
 // GET A TODO by ID
 router.get("/:id", async (req, res) => {
   try {
