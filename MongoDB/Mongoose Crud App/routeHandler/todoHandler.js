@@ -110,7 +110,7 @@ router.post("/all", async (req, res) => {
   })
 })
 
-// PUT TODO
+// PUT TODO //
 router.put("/:id", async (req, res) => {
   const result = await Todo.findByIdAndUpdate(
     { _id: req.params.id },
