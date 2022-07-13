@@ -79,7 +79,7 @@ router.get("/:id", async (req, res) => {
   }
 })
 
-// POST A TODO
+// POST A TODO //
 router.post("/", async (req, res) => {
   const newTodo = new Todo(req.body)
   await newTodo.save((err) => {
