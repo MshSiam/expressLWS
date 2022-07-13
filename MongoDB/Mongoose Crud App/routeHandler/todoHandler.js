@@ -64,7 +64,7 @@ router.get("/language", async (req, res) => {
   })
 })
 
-// GET A TODO by ID
+// GET A TODO by ID //
 router.get("/:id", async (req, res) => {
   try {
     const data = await Todo.find({ _id: req.params.id })
